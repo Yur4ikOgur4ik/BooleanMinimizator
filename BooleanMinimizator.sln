@@ -1,0 +1,28 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BooleanMinimizator", "BooleanMinimizator\BooleanMinimizator.csproj", "{6447EE40-EA70-414C-A7B2-D7D6FADFB8BE}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BooleanMinimizerLibrary", "BooleanMinimizerLibrary\BooleanMinimizerLibrary.csproj", "{0FB3C2C7-9372-4ADC-A47E-1BB451F31DE3}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Test", "Test\Test.csproj", "{87A2264E-FBCF-489E-9BAA-4F7BFE45888D}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{6447EE40-EA70-414C-A7B2-D7D6FADFB8BE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6447EE40-EA70-414C-A7B2-D7D6FADFB8BE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6447EE40-EA70-414C-A7B2-D7D6FADFB8BE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6447EE40-EA70-414C-A7B2-D7D6FADFB8BE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0FB3C2C7-9372-4ADC-A47E-1BB451F31DE3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0FB3C2C7-9372-4ADC-A47E-1BB451F31DE3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0FB3C2C7-9372-4ADC-A47E-1BB451F31DE3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0FB3C2C7-9372-4ADC-A47E-1BB451F31DE3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{87A2264E-FBCF-489E-9BAA-4F7BFE45888D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{87A2264E-FBCF-489E-9BAA-4F7BFE45888D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{87A2264E-FBCF-489E-9BAA-4F7BFE45888D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{87A2264E-FBCF-489E-9BAA-4F7BFE45888D}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal

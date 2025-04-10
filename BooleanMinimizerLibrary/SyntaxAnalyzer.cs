@@ -1,4 +1,4 @@
-﻿namespace BooleanMinimizerLibrary
+namespace BooleanMinimizerLibrary
 {
     public class SyntaxAnalyzer
     {
@@ -6,24 +6,51 @@
         private char currentChar;
         private int pos;
 
-        public bool Parse(string input)
+        public Node Parse(string input)
         {
-            
-            // Проверка на пустой ввод
             if (string.IsNullOrWhiteSpace(input))
-            {
                 throw new ArgumentException("Ошибка: Ввод не может быть пустым.");
-            }
-            
+
             expr = input;
             pos = 0;
             NextChar();
-            Expression();
+            Node tree = Expression();
             if (currentChar != '\0')
-                ThrowError("лишний(е) символы в конце выражения");
+                ThrowError("Лишние символы в конце выражения");
 
-            return true;
+            return tree;
         }
+
+        public List<string> GetPOLIZ(Node node)
+        {
+            List<string> output = new List<string>();
+            ToPOLIZ(node, output);
+            return output;
+        }
+
+        private void ToPOLIZ(Node node, List<string> output)
+        {
+            if (node == null) return;
+
+            ToPOLIZ(node.Left, output);
+            ToPOLIZ(node.Right, output);
+
+            if (node.Type == NodeType.Variable || node.Type == NodeType.Constant || node.Type == NodeType.Vector)
+                output.Add(node.Value);
+            else
+                output.Add(NodeTypeToSymbol(node.Type));
+        }
+
+        private string NodeTypeToSymbol(NodeType type) => type switch
+        {
+            NodeType.Not => "¬",
+            NodeType.And => "∧",
+            NodeType.Or => "∨",
+            NodeType.Xor => "⊕",
+            NodeType.Implies => "→",
+            NodeType.Equivalent => "↔",
+            _ => throw new Exception("Неизвестный тип узла")
+        };
 
         private void NextChar()
         {
@@ -32,137 +59,144 @@
 
         private void ThrowError(string message)
         {
-            throw new ArgumentException($"Ошибка на символе № {pos}: {message}");
+            throw new ArgumentException($"Ошибка на символе №{pos}: {message}");
         }
 
-        private void Expression()
+        private Node Expression()
         {
-            Implies();
+            Node node = Implies();
             while (currentChar == '↔')
             {
                 NextChar();
-                Implies();
+                node = new Node(NodeType.Equivalent, null, node, Implies());
             }
+            return node;
         }
 
-        private void Implies()
+        private Node Implies()
         {
-            Xor();
+            Node node = Xor();
             while (currentChar == '→')
             {
                 NextChar();
-                Xor();
+                node = new Node(NodeType.Implies, null, node, Xor());
             }
+            return node;
         }
 
-        private void Xor()
+        private Node Xor()
         {
-            Or();
+            Node node = Or();
             while (currentChar == '⊕')
             {
                 NextChar();
-                Or();
+                node = new Node(NodeType.Xor, null, node, Or());
             }
+            return node;
         }
 
-        private void Or()
+        private Node Or()
         {
-            And();
+            Node node = And();
             while (currentChar == '∨')
             {
                 NextChar();
-                And();
+                node = new Node(NodeType.Or, null, node, And());
             }
+            return node;
         }
 
-        private void And()
+        private Node And()
         {
-            Not();
+            Node node = Not();
             while (currentChar == '∧')
             {
                 NextChar();
-                Not();
+                node = new Node(NodeType.And, null, node, Not());
             }
+            return node;
         }
 
-        private void Not()
+        private Node Not()
         {
             if (currentChar == '¬')
             {
                 NextChar();
-                Not();
+                return new Node(NodeType.Not, null, Not());
             }
-            else
-            {
-                Primary();
-            }
+            return Primary();
         }
 
-        private void Primary()
+        private Node Primary()
         {
             if (IsVariable(currentChar))
             {
+                var varName = currentChar.ToString();
                 NextChar();
+                return new Node(NodeType.Variable, varName);
             }
             else if (currentChar == '0' || currentChar == '1')
             {
                 if (IsVector())
-                    Vector();
+                {
+                    string vector = ReadVector();
+                    return new Node(NodeType.Vector, vector);
+                }
                 else
+                {
+                    char constant = currentChar;
                     NextChar();
+                    return new Node(NodeType.Constant, constant.ToString());
+                }
             }
             else if (currentChar == '(')
             {
                 NextChar();
-                Expression();
+                Node node = Expression();
                 if (currentChar != ')')
                     ThrowError("Ожидалось ')'");
                 NextChar();
+                return node;
             }
             else
             {
-                ThrowError($"Неожиданный символ");
+                ThrowError("Неожиданный символ");
+                return null;
             }
         }
 
-        private bool IsVariable(char ch)
-        {
-            return ch == 'w' || ch == 'x' || ch == 'y' || ch == 'z';
-        }
+        private bool IsVariable(char ch) => ch == 'w' || ch == 'x' || ch == 'y' || ch == 'z';
 
         private bool IsVector()
         {
             int tempPos = pos;
-            int length = 1; // считаем текущий символ
+            int length = 1;
 
             while (tempPos < expr.Length && (expr[tempPos] == '0' || expr[tempPos] == '1'))
             {
                 tempPos++;
                 length++;
             }
-
             return length >= 2;
         }
 
-        private void Vector()
+        private string ReadVector()
         {
-            int length = 1; // уже есть первый символ (currentChar == '0' или '1')
+            string result = currentChar.ToString();
+            NextChar();
 
             while (currentChar == '0' || currentChar == '1')
             {
+                result += currentChar;
                 NextChar();
-                length++;
             }
 
-            length--; // убираем лишний +1 после последнего NextChar()
+            if (!IsPowerOfTwo(result.Length))
+                ThrowError("Вектор должен быть длины степени два (1, 2, 4, 8...)");
 
-            if (!IsPowerOfTwo(length))
-                ThrowError("Вектор должен быть длины степени два (1, 2, 4, 8, 16, ...)");
+            return result;
         }
 
-        private bool IsPowerOfTwo(int n)
-        {
-            return n > 0 && (n & (n - 1)) == 0;
-        }
+        private bool IsPowerOfTwo(int n) => n > 0 && (n & (n - 1)) == 0;
     }
 }

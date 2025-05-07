@@ -9,26 +9,27 @@
 
     <form asp-action="Index" method="post">
         <label for="inputField">Введите функцию или её вектор:</label>
-        <input type="text" asp-for="InputFunction" id="inputField" placeholder="Например: 01110110">
+        <input type="text" asp-for="InputFunction" id="inputField" placeholder="Например: 01110110"
+               data-help="Введите логическое выражение или вектор функции. Например: 01110110 или (x ∧ y) ∨ ¬z">
 
-        <button type="submit">Построить</button>
+        <button type="submit" data-help="Нажмите для построения таблицы истинности и минимизации">Построить</button>
 
         <div class="keyboard" id="keyboard">
-            <button type="button" class="key">∨</button>
-            <button type="button" class="key">∧</button>
-            <button type="button" class="key">¬</button>
-            <button type="button" class="key">⊕</button>
-            <button type="button" class="key">→</button>
-            <button type="button" class="key">↔</button>
-            <button type="button" class="key">(</button>
-            <button type="button" class="key">)</button>
-            <button type="button" class="key">w</button>
-            <button type="button" class="key">x</button>
-            <button type="button" class="key">y</button>
-            <button type="button" class="key">z</button>
+            <button type="button" class="key" data-help="Логическое ИЛИ">∨</button>
+            <button type="button" class="key" data-help="Логическое И">∧</button>
+            <button type="button" class="key" data-help="Логическое НЕ">¬</button>
+            <button type="button" class="key" data-help="Исключающее ИЛИ">⊕</button>
+            <button type="button" class="key" data-help="Импликация">→</button>
+            <button type="button" class="key" data-help="Эквиваленция">↔</button>
+            <button type="button" class="key" data-help="Открывающая скобка">(</button>
+            <button type="button" class="key" data-help="Закрывающая скобка">)</button>
+            <button type="button" class="key" data-help="Переменная w">w</button>
+            <button type="button" class="key" data-help="Переменная x">x</button>
+            <button type="button" class="key" data-help="Переменная y">y</button>
+            <button type="button" class="key" data-help="Переменная z">z</button>
         </div>
 
-        <button type="button" id="toggleKeyboard">Скрыть клавиатуру</button>
+        <button type="button" id="toggleKeyboard" data-help="Скрывает или показывает клавиатуру">Скрыть клавиатуру</button>
     </form>
 
     @if (!string.IsNullOrEmpty(Model.ResultMessage))
@@ -38,10 +39,17 @@
         </div>
     }
 
+    @if (Model.FunctionExpression is not null)
+    {
+        <div class="alert alert-secondary mt-3">
+            <strong>Функция:</strong> @Model.FunctionExpression
+        </div>
+    }
+
     @if (Model.PolizOutput is not null)
     {
         <div class="alert alert-secondary mt-3">
-            <strong>ПОЛИЗ:</strong> @Model.PolizOutput
+            <strong>ПОЛИЗ функции:</strong> @Model.PolizOutput
         </div>
     }
 
@@ -51,7 +59,83 @@
             <strong>Вектор функции:</strong> @Model.VectorOutput
         </div>
     }
-    
+
+    @if (Model.TruthTable != null && Model.TruthTable.Any())
+    {
+        <div class="mt-3">
+            <h3>Таблица истинности</h3>
+            <table class="truth-table">
+                <thead>
+                <tr>
+                    @foreach (var variable in Model.TruthTable.First().Keys)
+                    {
+                        <th>@variable</th>
+                    }
+                </tr>
+                </thead>
+                <tbody>
+                @foreach (var row in Model.TruthTable)
+                {
+                    <tr>
+                        @foreach (var variable in row.Keys)
+                        {
+                            <td>@(row[variable] ? "1" : "0")</td>
+                        }
+                    </tr>
+                }
+                </tbody>
+            </table>
+        </div>
+    }
+
+    <!-- Вывод МКНФ -->
+    @if (!string.IsNullOrEmpty(Model.MKNFOutput))
+    {
+        <div class="alert alert-success mt-3">
+            <strong>МКНФ:</strong> @Model.MKNFOutput
+        </div>
+    }
+
+    <!-- Вывод МДНФ -->
+    @if (!string.IsNullOrEmpty(Model.MDNFOutput))
+    {
+        <div class="alert alert-warning mt-3">
+            <strong>МДНФ:</strong> @Model.MDNFOutput
+        </div>
+    }
+
+    @if (Model.KarnaughMap != null && Model.KarnaughMap.Any())
+    {
+        <div class="mt-3">
+            <h3>Карта Карно</h3>
+            <table class="karnaugh-map">
+                @foreach (var row in Model.KarnaughMap)
+                {
+                    <tr>
+                        @foreach (var cell in row)
+                        {
+                            if (row == Model.KarnaughMap.First())
+                            {
+                                <th>@cell</th>
+                            }
+                            else if (cell == "1")
+                            {
+                                <td class="one">@cell</td>
+                            }
+                            else if (cell == "0")
+                            {
+                                <td class="zero">@cell</td>
+                            }
+                            else
+                            {
+                                <td>@cell</td>
+                            }
+                        }
+                    </tr>
+                }
+            </table>
+        </div>
+    }
 </div>
 
 <section class="instructions">
@@ -63,7 +147,7 @@
     </ul>
 </section>
 
-<button type="button" id="helpButton">Поддержка</button>
+<button type="button" id="helpButton" data-help="Открывает информацию о поддержке">Поддержка</button>
 
 <div id="supportText" class="support-text" style="display:none;">
     <h3>Как получить поддержку</h3>
@@ -71,3 +155,5 @@
     <p><strong>Email:</strong> support@website.com</p>
     <p>Мы всегда готовы помочь!</p>
 </div>
+
+<script src="~/js/contextHelp.js"></script>

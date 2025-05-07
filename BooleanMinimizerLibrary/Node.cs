@@ -19,6 +19,7 @@ namespace BooleanMinimizerLibrary
         public string Value { get; set; }
         public Node Left { get; set; }
         public Node Right { get; set; }
+        public List<string> Variables { get; set; } // Новое свойство
 
         public Node(NodeType type, string value = null, Node left = null, Node right = null)
         {

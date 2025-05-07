@@ -1,7 +1,7 @@
-using System.Diagnostics;
-using Microsoft.AspNetCore.Mvc;
 using BooleanMinimizator.Models;
 using BooleanMinimizerLibrary;
+using Microsoft.AspNetCore.Mvc;
+using System.Diagnostics;
 
 namespace BooleanMinimizator.Controllers
 {
@@ -13,28 +13,36 @@ namespace BooleanMinimizator.Controllers
             return View(new BooleanMinimizatorModel());
         }
 
-        [HttpPost]
         public IActionResult Index(BooleanMinimizatorModel model)
         {
-            var parser = new SyntaxAnalyzer();
-            var vectorBuilder = new FunctionVectorBuilder();
-
-            try
+            if (!string.IsNullOrEmpty(model.InputFunction))
             {
-                var tree = parser.Parse(model.InputFunction);
-                var poliz = parser.GetPOLIZ(tree);
-                var vector = vectorBuilder.BuildVector(tree);
+                try
+                {
+                    var syntaxAnalyzer = new SyntaxAnalyzer();
+                    Node rootNode = syntaxAnalyzer.Parse(model.InputFunction);
 
-                model.ResultMessage = "Функция успешно распознана!";
-                model.VectorOutput = vector;
-            }
-            catch (ArgumentException ex)
-            {
-                model.ResultMessage = ex.Message;
-            }
+                    var functionVectorBuilder = new FunctionVectorBuilder();
+                    model.VectorOutput = functionVectorBuilder.BuildVector(rootNode);
+                    model.TruthTable = functionVectorBuilder.BuildTruthTable(rootNode);
+                    model.PolizOutput = string.Join(" ", syntaxAnalyzer.GetPOLIZ(rootNode));
+                    model.MKNFOutput = BooleanMinimizer.MinimizeMKNF(model.VectorOutput);
+                    model.MDNFOutput = BooleanMinimizer.MinimizeMDNF(model.VectorOutput);
 
+                    // Добавлено построение карты Карно
+                    var karnaughBuilder = new KarnaughMapBuilder();
+                    model.KarnaughMap = karnaughBuilder.Build(rootNode);
+
+                    model.ResultMessage = "Функция успешно распознана!";
+                }
+                catch (Exception ex)
+                {
+                    model.ResultMessage = $"Ошибка: {ex.Message}";
+                }
+            }
             return View(model);
         }
+
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()

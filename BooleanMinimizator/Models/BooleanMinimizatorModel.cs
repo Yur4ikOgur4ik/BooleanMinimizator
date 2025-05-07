@@ -9,5 +9,15 @@ namespace BooleanMinimizator.Models
         public string? PolizOutput { get; set; }   // сюда выводится ПОЛИЗ
 
         public string? VectorOutput { get; set; }  // сюда выводится вектор функции
+
+        public List<Dictionary<string, bool>> TruthTable { get; set; } // Таблица истинности
+
+        public string FunctionExpression { get; set; } // Новое поле для хранения функции
+
+        public string MKNFOutput { get; set; }      // Минимальная конъюнктивная нормальная форма
+
+        public string MDNFOutput { get; set; }      // Минимальная дизъюнктивная нормальная форма
+
+        public List<List<string>> KarnaughMap { get; set; }
     }
 }

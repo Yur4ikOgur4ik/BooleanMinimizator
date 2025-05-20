@@ -26,8 +26,8 @@ namespace BooleanMinimizator.Controllers
                     model.VectorOutput = functionVectorBuilder.BuildVector(rootNode);
                     model.TruthTable = functionVectorBuilder.BuildTruthTable(rootNode);
                     model.PolizOutput = string.Join(" ", syntaxAnalyzer.GetPOLIZ(rootNode));
-                    model.MKNFOutput = BooleanMinimizer.MinimizeMKNF(model.VectorOutput);
-                    model.MDNFOutput = BooleanMinimizer.MinimizeMDNF(model.VectorOutput);
+                    model.SKNFOutput = BooleanMinimizer.MinimizeMKNF(model.VectorOutput);
+                    model.SDNFOutput = BooleanMinimizer.MinimizeMDNF(model.VectorOutput);
 
                     // Добавлено построение карты Карно
                     var karnaughBuilder = new KarnaughMapBuilder();

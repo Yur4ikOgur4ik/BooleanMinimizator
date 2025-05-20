@@ -14,10 +14,11 @@ namespace BooleanMinimizator.Models
 
         public string FunctionExpression { get; set; } // Новое поле для хранения функции
 
-        public string MKNFOutput { get; set; }      // Минимальная конъюнктивная нормальная форма
+        public string SKNFOutput { get; set; }      // конъюнктивная нормальная форма
 
-        public string MDNFOutput { get; set; }      // Минимальная дизъюнктивная нормальная форма
+        public string SDNFOutput { get; set; }      // дизъюнктивная нормальная форма
 
         public List<List<string>> KarnaughMap { get; set; }
+        
     }
 }

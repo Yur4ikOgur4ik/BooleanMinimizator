@@ -25,7 +25,18 @@ toggleButton.addEventListener("click", function () {
 // Логика ввода символов с клавиатуры
 document.querySelectorAll(".key").forEach(button => {
     button.addEventListener("click", function () {
-        document.getElementById("inputField").value += this.innerText;
+        const input = document.getElementById("inputField");
+        const start = input.selectionStart;
+        const end = input.selectionEnd;
+        const text = this.innerText;
+
+        // Вставка текста в позицию курсора
+        input.value = input.value.slice(0, start) + text + input.value.slice(end);
+
+        // Перемещение курсора после вставленного текста
+        const newPos = start + text.length;
+        input.setSelectionRange(newPos, newPos);
+        input.focus(); // Сохраняем фокус
     });
 });
 

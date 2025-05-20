@@ -133,8 +133,25 @@ namespace BooleanMinimizerLibrary
             {
                 if (IsVector())
                 {
-                    string vector = ReadVector();
-                    return new Node(NodeType.Vector, vector);
+                    string vector = ReadVector(); // Читаем строку вектора (например, "1010")
+
+                    // Определяем количество переменных
+                    int numVars = (int)Math.Log(vector.Length, 2);
+                    var variables = new List<string>();
+                    for (int i = 0; i < numVars; i++)
+                    {
+                        variables.Add(i switch
+                        {
+                            0 => "w",
+                            1 => "x",
+                            2 => "y",
+                            3 => "z",
+                            _ => throw new Exception("Максимум 4 переменные")
+                        });
+                    }
+
+                    // Создаем узел Vector с сохраненными переменными
+                    return new Node(NodeType.Vector, vector) { Variables = variables };
                 }
                 else
                 {

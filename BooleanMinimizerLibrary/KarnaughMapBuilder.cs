@@ -8,18 +8,21 @@ namespace BooleanMinimizerLibrary
     {
         public List<List<string>> Build(Node root, List<string> variables = null)
         {
+
             if (variables == null)
             {
-                variables = GetVariables(root).OrderBy(v => v).ToList();
+                if (root.Type == NodeType.Vector && root.Variables != null)
+                    variables = root.Variables;
+                else
+                    variables = GetVariables(root).OrderBy(v => v).ToList();
             }
-
             int varCount = variables.Count;
             if (varCount < 2 || varCount > 4)
-            {
                 throw new Exception("Карта Карно поддерживает от 2 до 4 переменных");
-            }
 
             string vector = new FunctionVectorBuilder().BuildVector(root);
+
+            
             var map = new List<List<string>>();
 
             if (varCount == 2)
@@ -112,10 +115,21 @@ namespace BooleanMinimizerLibrary
         {
             var variables = new HashSet<string>();
             if (node == null) return variables;
-            if (node.Type == NodeType.Variable)
+
+            if (node.Type == NodeType.Vector && node.Variables != null)
+            {
+                foreach (var varName in node.Variables)
+                    variables.Add(varName);
+            }
+            else if (node.Type == NodeType.Variable)
+            {
                 variables.Add(node.Value);
-            variables.UnionWith(GetVariables(node.Left));
-            variables.UnionWith(GetVariables(node.Right));
+            }
+            else
+            {
+                variables.UnionWith(GetVariables(node.Left));
+                variables.UnionWith(GetVariables(node.Right));
+            }
             return variables;
         }
     }

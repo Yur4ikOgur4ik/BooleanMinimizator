@@ -46,12 +46,12 @@
         </div>
     }
 
-    @if (Model.PolizOutput is not null)
-    {
-        <div class="alert alert-secondary mt-3">
-            <strong>ПОЛИЗ функции:</strong> @Model.PolizOutput
-        </div>
-    }
+    @* @if (Model.PolizOutput is not null) *@
+    @* { *@
+    @*     <div class="alert alert-secondary mt-3"> *@
+    @*         <strong>ПОЛИЗ функции:</strong> @Model.PolizOutput *@
+    @*     </div> *@
+    @* } *@
 
     @if (Model.VectorOutput is not null)
     {
@@ -92,7 +92,7 @@
     @if (!string.IsNullOrEmpty(Model.MKNFOutput))
     {
         <div class="alert alert-success mt-3">
-            <strong>МКНФ:</strong> @Model.MKNFOutput
+            <strong>СКНФ:</strong> @Model.MKNFOutput
         </div>
     }
 
@@ -100,7 +100,7 @@
     @if (!string.IsNullOrEmpty(Model.MDNFOutput))
     {
         <div class="alert alert-warning mt-3">
-            <strong>МДНФ:</strong> @Model.MDNFOutput
+            <strong>СДНФ:</strong> @Model.MDNFOutput
         </div>
     }
 

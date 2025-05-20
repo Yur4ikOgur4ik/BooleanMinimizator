@@ -7,20 +7,22 @@ namespace BooleanMinimizerLibrary
 {
     public class BooleanMinimizer
     {
-        public static string MinimizeMKNF(string vector)
-        {
-            var maxterms = GetMaxterms(vector);
-            var variables = GetVariables(vector.Length);
-            var terms = maxterms.Select(m => BuildMaxterm(m, variables));
-            return terms.Any() ? string.Join(" ∧ ", terms) : "1"; // 1 для тривиального случая
-        }
-
-        public static string MinimizeMDNF(string vector)
+        public static string MinimizeMDNF(string vector, List<string> variables = null)
         {
             var minterms = GetMinterms(vector);
-            var variables = GetVariables(vector.Length);
+            if (variables == null)
+                variables = GetVariables(vector.Length);
             var terms = minterms.Select(m => BuildMinterm(m, variables));
-            return terms.Any() ? string.Join(" ∨ ", terms) : "0"; // 0 для тривиального случая
+            return terms.Any() ? string.Join(" ∨ ", terms) : "0";
+        }
+
+        public static string MinimizeMKNF(string vector, List<string> variables = null)
+        {
+            var maxterms = GetMaxterms(vector);
+            if (variables == null)
+                variables = GetVariables(vector.Length);
+            var terms = maxterms.Select(m => BuildMaxterm(m, variables));
+            return terms.Any() ? string.Join(" ∧ ", terms) : "1";
         }
 
         private static List<int> GetMinterms(string vector)

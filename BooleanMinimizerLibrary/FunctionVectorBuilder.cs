@@ -21,10 +21,10 @@ namespace BooleanMinimizerLibrary
                 {
                     variables.Add(i switch
                     {
-                        0 => "w",
-                        1 => "x",
-                        2 => "y",
-                        3 => "z",
+                        0 => "x",
+                        1 => "y",
+                        2 => "z",
+                        3 => "w",
                         _ => throw new Exception("Максимум 4 переменные")
                     });
                 }

@@ -60,6 +60,22 @@
         </div>
     }
 
+    <!-- Вывод CКНФ -->
+    @if (!string.IsNullOrEmpty(Model.SKNFOutput))
+    {
+        <div class="alert alert-success mt-3">
+            <strong>СКНФ:</strong> @Model.SKNFOutput
+        </div>
+    }
+
+    <!-- Вывод CДНФ -->
+    @if (!string.IsNullOrEmpty(Model.SDNFOutput))
+    {
+        <div class="alert alert-warning mt-3">
+            <strong>СДНФ:</strong> @Model.SDNFOutput
+        </div>
+    }
+
     @if (Model.TruthTable != null && Model.TruthTable.Any())
     {
         <div class="mt-3">
@@ -85,22 +101,6 @@
                 }
                 </tbody>
             </table>
-        </div>
-    }
-
-    <!-- Вывод МКНФ -->
-    @if (!string.IsNullOrEmpty(Model.SKNFOutput))
-    {
-        <div class="alert alert-success mt-3">
-            <strong>СКНФ:</strong> @Model.SKNFOutput
-        </div>
-    }
-
-    <!-- Вывод МДНФ -->
-    @if (!string.IsNullOrEmpty(Model.SDNFOutput))
-    {
-        <div class="alert alert-warning mt-3">
-            <strong>СДНФ:</strong> @Model.SDNFOutput
         </div>
     }
 
@@ -136,6 +136,23 @@
             </table>
         </div>
     }
+
+    <!-- Вывод МДНФ -->
+    @if (!string.IsNullOrEmpty(Model.MDNFOutput))
+    {
+        <div class="alert alert-warning mt-3">
+            <strong>МДНФ:</strong> @Model.MDNFOutput
+        </div>
+    }
+
+    <!-- Вывод МКНФ -->
+    @if (!string.IsNullOrEmpty(Model.MKNFOutput))
+    {
+        <div class="alert alert-warning mt-3">
+            <strong>МКНФ:</strong> @Model.MKNFOutput
+        </div>
+    }
+    
 </div>
 
 <section class="instructions">

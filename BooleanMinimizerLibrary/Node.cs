@@ -28,5 +28,22 @@ namespace BooleanMinimizerLibrary
             Left = left;
             Right = right;
         }
+        
+        static public HashSet<string> GetVariablesRecursive(Node node)
+        {
+            var variables = new HashSet<string>();
+            if (node == null) return variables;
+
+            if (node.Type == NodeType.Variable)
+            {
+                variables.Add(node.Value);
+            }
+            else
+            {
+                variables.UnionWith(GetVariablesRecursive(node.Left));
+                variables.UnionWith(GetVariablesRecursive(node.Right));
+            }
+            return variables;
+        }
     }
 }

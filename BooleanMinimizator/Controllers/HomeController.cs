@@ -10,7 +10,7 @@ namespace BooleanMinimizator.Controllers
         [HttpGet]
         public IActionResult Index()
         {
-            return View(new BooleanMinimizatorModel());
+            return View(new BooleanMinimizatorModel()); 
         }
 
         public IActionResult Index(BooleanMinimizatorModel model)

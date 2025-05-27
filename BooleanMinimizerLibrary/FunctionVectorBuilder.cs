@@ -11,17 +11,20 @@ namespace BooleanMinimizerLibrary
         {
             if (root.Type == NodeType.Vector)
             {
+                if (root.Variables != null && root.Variables.Count > 0)
+                    return root.Value;
+
+                // Если переменные не заданы, вычисляем их по умолчанию
                 int n = (int)Math.Log(root.Value.Length, 2);
                 var variables = new List<string>();
                 for (int i = 0; i < n; i++)
                 {
-                    // Используем порядок w, x, y, z
                     variables.Add(i switch
                     {
-                        0 => "w",
-                        1 => "x",
-                        2 => "y",
-                        3 => "z",
+                        0 => "x",
+                        1 => "y",
+                        2 => "z",
+                        3 => "w",
                         _ => throw new Exception("Максимум 4 переменные")
                     });
                 }
@@ -110,32 +113,44 @@ namespace BooleanMinimizerLibrary
             var variables = new HashSet<string>();
             if (node == null) return variables;
 
-            if (node.Type == NodeType.Variable)
+            if (node.Type == NodeType.Vector && node.Variables != null)
+            {
+                foreach (var varName in node.Variables)
+                    variables.Add(varName);
+            }
+            else if (node.Type == NodeType.Variable)
+            {
                 variables.Add(node.Value);
-
-            variables.UnionWith(GetVariables(node.Left));
-            variables.UnionWith(GetVariables(node.Right));
-
+            }
+            else
+            {
+                variables.UnionWith(GetVariables(node.Left));
+                variables.UnionWith(GetVariables(node.Right));
+            }
             return variables;
         }
 
         private bool EvaluateVector(Node node, Dictionary<string, bool> variables)
         {
-            // Проверяем, что переменные существуют
             if (node.Variables == null || node.Variables.Count == 0)
                 throw new Exception("Переменные для вектора не определены");
 
             int index = 0;
             for (int i = 0; i < node.Variables.Count; i++)
             {
-                if (variables[node.Variables[i]])
-                    index |= 1 << (node.Variables.Count - 1 - i);
+                if (variables.TryGetValue(node.Variables[i], out bool value))
+                {
+                    if (value)
+                        index |= 1 << (node.Variables.Count - 1 - i);
+                }
+                else
+                {
+                    throw new Exception($"Переменная {node.Variables[i]} отсутствует в словаре");
+                }
             }
 
-            // Проверяем, что индекс находится в диапазоне длины вектора
             if (index >= node.Value.Length)
                 throw new Exception("Индекс выходит за границы вектора");
-
             return node.Value[index] == '1';
         }
 

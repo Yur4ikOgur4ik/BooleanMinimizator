@@ -46,33 +46,10 @@
         </div>
     }
 
-    @* @if (Model.PolizOutput is not null) *@
-    @* { *@
-    @*     <div class="alert alert-secondary mt-3"> *@
-    @*         <strong>ПОЛИЗ функции:</strong> @Model.PolizOutput *@
-    @*     </div> *@
-    @* } *@
-
     @if (Model.VectorOutput is not null)
     {
         <div class="alert alert-info mt-3">
             <strong>Вектор функции:</strong> @Model.VectorOutput
-        </div>
-    }
-
-    <!-- Вывод CКНФ -->
-    @if (!string.IsNullOrEmpty(Model.SKNFOutput))
-    {
-        <div class="alert alert-success mt-3">
-            <strong>СКНФ:</strong> @Model.SKNFOutput
-        </div>
-    }
-
-    <!-- Вывод CДНФ -->
-    @if (!string.IsNullOrEmpty(Model.SDNFOutput))
-    {
-        <div class="alert alert-warning mt-3">
-            <strong>СДНФ:</strong> @Model.SDNFOutput
         </div>
     }
 
@@ -82,59 +59,132 @@
             <h3>Таблица истинности</h3>
             <table class="truth-table">
                 <thead>
-                <tr>
-                    @foreach (var variable in Model.TruthTable.First().Keys)
-                    {
-                        <th>@variable</th>
-                    }
-                </tr>
-                </thead>
-                <tbody>
-                @foreach (var row in Model.TruthTable)
-                {
                     <tr>
-                        @foreach (var variable in row.Keys)
+                        @foreach (var variable in Model.TruthTable.First().Keys)
                         {
-                            <td>@(row[variable] ? "1" : "0")</td>
+                            <th>@variable</th>
                         }
                     </tr>
-                }
+                </thead>
+                <tbody>
+                    @foreach (var row in Model.TruthTable)
+                    {
+                        <tr>
+                            @foreach (var variable in row.Keys)
+                            {
+                                <td>@(row[variable] ? "1" : "0")</td>
+                            }
+                        </tr>
+                    }
                 </tbody>
             </table>
         </div>
     }
 
-    @if (Model.KarnaughMap != null && Model.KarnaughMap.Any())
+    <!-- Вывод CКНФ -->
+    @if (!string.IsNullOrEmpty(Model.SKNFOutput))
+
+    {
+        <div class="alert alert-success mt-3">
+            <strong>СКНФ:</strong> @Model.SKNFOutput
+        </div>
+    }
+
+    <!-- Вывод CДНФ -->
+    @if (!string.IsNullOrEmpty(Model.SDNFOutput))
+
+    {
+        <div class="alert alert-warning mt-3">
+            <strong>СДНФ:</strong> @Model.SDNFOutput
+        </div>
+    }
+
+
+    @if (Model.KarnaughSteps != null)
+
     {
         <div class="mt-3">
-            <h3>Карта Карно</h3>
-            <table class="karnaugh-map">
-                @foreach (var row in Model.KarnaughMap)
+            <h3>Пошаговое построение карты Карно</h3>
+
+            <!-- Навигация -->
+            <div class="karnaugh-steps-nav">
+                <button type="button" onclick="prevStep()">Назад</button>
+                <span id="currentStep">1</span>/@Model.KarnaughSteps.Count
+                <button type="button" onclick="nextStep()">Вперед</button>
+            </div>
+
+            <!-- Контейнер для карты -->
+            <div id="karnaughStepsContainer">
+                @foreach (var step in Model.KarnaughSteps)
+
                 {
-                    <tr>
-                        @foreach (var cell in row)
-                        {
-                            if (row == Model.KarnaughMap.First())
+                    <div class="karnaugh-step">
+                        <p>@step.Description</p>
+                        <table class="karnaugh-map">
+                            @foreach (var row in step.Map)
                             {
-                                <th>@cell</th>
+                                <tr>
+                                    @foreach (var cell in row)
+                                    {
+
+                                        if (row == step.Map.First())
+
+                                        {
+                                            <th>@cell</th>
+                                        }
+
+                                        else if (cell == "1")
+
+                                        {
+                                            <td class="one">@cell</td>
+                                        }
+
+                                        else if (cell == "0")
+
+                                        {
+                                            <td class="zero">@cell</td>
+                                        }
+
+                                        else
+
+                                        {
+                                            <td>@cell</td>
+                                        }
+                                    }
+                                </tr>
                             }
-                            else if (cell == "1")
-                            {
-                                <td class="one">@cell</td>
-                            }
-                            else if (cell == "0")
-                            {
-                                <td class="zero">@cell</td>
-                            }
-                            else
-                            {
-                                <td>@cell</td>
-                            }
-                        }
-                    </tr>
+                        </table>
+                    </div>
                 }
-            </table>
+            </div>
         </div>
+
+        <script>
+            let currentStep = 0;
+            const steps = document.querySelectorAll('.karnaugh-step');
+
+            function showStep(step) {
+                steps.forEach((s, i) => s.style.display = i === step ? 'block' : 'none');
+                document.getElementById('currentStep').textContent = step + 1;
+            }
+
+            function nextStep() {
+                if (currentStep < steps.length - 1) {
+                    currentStep++;
+                    showStep(currentStep);
+                }
+            }
+
+            function prevStep() {
+                if (currentStep > 0) {
+                    currentStep--;
+                    showStep(currentStep);
+                }
+            }
+
+            // Показать первый шаг
+            showStep(0);
+        </script>
     }
 
     <!-- Вывод МДНФ -->
@@ -152,8 +202,129 @@
             <strong>МКНФ:</strong> @Model.MKNFOutput
         </div>
     }
-    
+
 </div>
+
+@if (Model.IsSolved)
+{
+    <div class="stepByStep">
+        <hr />
+        <div class="solution-title">Пошаговое решение</div>
+        <hr />
+        <div class="solution-section">
+            <h4>Минимизация ДНФ</h4>
+        </div>
+        <hr />
+
+        @if (Model.KarnaughMap != null && Model.KarnaughMap.Any())
+        {
+            <div class="mt-3">
+                <h3>Карта Карно</h3>
+
+                <table class="karnaugh-map">
+                    @foreach (var row in Model.KarnaughMap)
+                    {
+                        <tr>
+                            @foreach (var cell in row)
+                            {
+                                if (row == Model.KarnaughMap.First())
+                                {
+                                    <th>@cell</th>
+                                }
+                                else if (cell == "1")
+                                {
+                                    <td class="one">@cell</td>
+                                }
+                                else if (cell == "0")
+                                {
+                                    <td class="zero">@cell</td>
+                                }
+                                else
+                                {
+                                    <td>@cell</td>
+                                }
+                            }
+                        </tr>
+                    }
+                </table>
+
+                <p class="karnaugh-explanation">
+                    Выделим на карте Карно прямоугольные области из единиц наибольшей площади, являющиеся степенями двойки, и выпишем соответствующие им конъюнкции.
+                </p>
+
+                @if (Model.Areas != null && Model.Areas.Any())
+                {
+                    <div class="areas-maps mt-4">
+                        <h4>Выделенные области:</h4>
+
+                        @for (int index = 0; index < Model.Areas.Count; index++)
+                        {
+                            var area = Model.Areas[index];
+
+                            var mapCopy = Model.KarnaughMap
+                            .Select(row => row.ToList())
+                            .ToList();
+
+                            // Размеры карты без заголовков
+                            int rowCount = mapCopy.Count;
+                            int colCount = mapCopy[0].Count;
+
+                            // Маска для выделения
+                            bool[,] highlightMask = new bool[rowCount, colCount];
+
+                            for (int r = area.StartRow; r < area.StartRow + area.Height; r++)
+                            {
+                                for (int c = area.StartCol; c < area.StartCol + area.Width; c++)
+                                {
+                                    int wrappedRow = ((r % (rowCount - 1)) + 1); // +1 — пропуск заголовка строк
+                                    int wrappedCol = ((c % (colCount - 1)) + 1); // +1 — пропуск заголовка столбцов
+
+                                    highlightMask[wrappedRow, wrappedCol] = true;
+                                }
+                            }
+
+                            <div class="highlight-area mt-4">
+                                <h5>Область №@(index + 1)</h5>
+                                <table class="karnaugh-map">
+                                    @for (int r = 0; r < rowCount; r++)
+                                    {
+                                        <tr>
+                                            @for (int c = 0; c < colCount; c++)
+                                            {
+                                                var cell = mapCopy[r][c];
+
+                                                if (r == 0)
+                                                {
+                                                    <th>@cell</th>
+                                                }
+                                                else if (highlightMask[r, c])
+                                                {
+                                                    <td class="highlight">@Model.KarnaughMap[r][c]</td>
+                                                }
+                                                else if (cell == "1")
+                                                {
+                                                    <td class="one">@cell</td>
+                                                }
+                                                else if (cell == "0")
+                                                {
+                                                    <td class="zero">@cell</td>
+                                                }
+                                                else
+                                                {
+                                                    <td>@cell</td>
+                                                }
+                                            }
+                                        </tr>
+                                    }
+                                </table>
+                            </div>
+                        }
+                    </div>
+                }
+            </div>
+        }
+    </div>
+}
 
 <section class="instructions">
     <h2>Как пользоваться калькулятором</h2>

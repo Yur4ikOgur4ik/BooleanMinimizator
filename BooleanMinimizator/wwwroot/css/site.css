@@ -357,3 +357,7 @@ hr {
     background: #f5f5f5;
     border-radius: 5px;
 }
+.karnaugh-map td.zero-highlight {
+    background-color: #ffcccb; /* светло-красный */
+    font-weight: bold;
+}

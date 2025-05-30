@@ -35,7 +35,10 @@ namespace BooleanMinimizator.Controllers
                     model.KarnaughSteps = karnaughBuilder.BuildSteps(rootNode);
                     model.KarnaughMap = model.KarnaughSteps.Last().Map; // Итоговая карта
                     model.KarnaughMap = karnaughBuilder.Build(rootNode);
+
+                    model.Variables = karnaughBuilder.GetVariablesFromMap(model.KarnaughMap);
                     model.Areas = karnaughBuilder.FindAllMaximalAreas(model.KarnaughMap);
+                    model.ZeroAreas = karnaughBuilder.FindAllMaximalZeroAreas(model.KarnaughMap);
 
                     model.ResultMessage = "Функция успешно распознана!";
                     model.IsSolved = true;

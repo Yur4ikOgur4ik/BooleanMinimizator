@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Reflection;
 
 namespace BooleanMinimizerLibrary
 {
@@ -270,7 +271,77 @@ namespace BooleanMinimizerLibrary
                     { "10", vector[8].ToString(), vector[9].ToString(), vector[11].ToString(), vector[10].ToString() }
             };
         }
+        public List<Area> FindAllMaximalZeroAreas(List<List<string>> map)
+        {
+            int rowCount = map.Count - 1;       // Без заголовков
+            int colCount = map[0].Count - 1;
+            var allAreas = new List<Area>();
+            var zeros = new HashSet<(int, int)>();
 
+            // Собираем все позиции с "0"
+            for (int r = 0; r < rowCount; r++)
+            {
+                for (int c = 0; c < colCount; c++)
+                {
+                    if (map[r + 1][c + 1] == "0")
+                        zeros.Add((r, c));
+                }
+            }
+
+            // Все возможные прямоугольные области
+            var possibleHeights = GetPowersOfTwoUpTo(rowCount);
+            var possibleWidths = GetPowersOfTwoUpTo(colCount);
+            possibleHeights.Reverse();
+            possibleWidths.Reverse();
+
+            foreach (int height in possibleHeights)
+            {
+                foreach (int width in possibleWidths)
+                {
+                    for (int r = 0; r < rowCount; r++)
+                    {
+                        for (int c = 0; c < colCount; c++)
+                        {
+                            var area = new Area(r, c, height, width);
+                            var covered = area.GetCoveredCells(rowCount, colCount).ToList();
+                            if (covered.All(pos => zeros.Contains(pos)))
+                            {
+                                allAreas.Add(area);
+                            }
+                        }
+                    }
+                }
+            }
+
+            // Жадно выбираем области, покрывающие максимум новых нулей
+            var result = new List<Area>();
+            var coveredCells = new HashSet<(int, int)>();
+
+            while (coveredCells.Count < zeros.Count)
+            {
+                Area bestArea = null;
+                int maxNew = 0;
+
+                foreach (var area in allAreas)
+                {
+                    var cells = area.GetCoveredCells(rowCount, colCount).ToList();
+                    int newCount = cells.Count(c => !coveredCells.Contains(c));
+                    if (newCount > maxNew)
+                    {
+                        maxNew = newCount;
+                        bestArea = area;
+                    }
+                }
+
+                if (bestArea == null) break;
+                result.Add(bestArea);
+
+                foreach (var cell in bestArea.GetCoveredCells(rowCount, colCount))
+                    coveredCells.Add(cell);
+            }
+
+            return result;
+        }
         public List<Area> FindAllMaximalAreas(List<List<string>> map)
         {
             int rowCount = map.Count - 1;       // Без заголовков
@@ -408,6 +479,29 @@ namespace BooleanMinimizerLibrary
             }
         }
 
+        public List<string> GetVariablesFromMap(List<List<string>> map)
+        {
+            if (map == null || map.Count == 0 || map[0].Count == 0)
+                return new List<string>();
+
+            string header = map[0][0]; // Например: "x\yz"
+
+            if (header.Contains("\\"))
+            {
+                var parts = header.Split('\\');
+                var rowVars = parts[0].ToCharArray().Select(c => c.ToString()).ToList();
+                var colVars = parts[1].ToCharArray().Select(c => c.ToString()).ToList();
+
+                return rowVars.Concat(colVars).Distinct().ToList();
+            }
+
+            // Резервный вариант — стандартные имена
+            int varCount = (int)Math.Log(map[0].Count - 1, 2);
+            return Enumerable.Range(0, varCount)
+                             .Select(i => "xyzw"[i].ToString())
+                             .ToList();
+        }
+
         public class Area
         {
             public int StartRow { get; }
@@ -440,6 +534,9 @@ namespace BooleanMinimizerLibrary
                     }
                 }
             }
+
+            
+
         }
     }
 }

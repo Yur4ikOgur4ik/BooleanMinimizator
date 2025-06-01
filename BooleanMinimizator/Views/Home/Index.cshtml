@@ -80,118 +80,99 @@
             </table>
         </div>
     }
-
-    <!-- Вывод CКНФ -->
-    @if (!string.IsNullOrEmpty(Model.SKNFOutput))
-
-    {
-        <div class="alert alert-success mt-3">
-            <strong>СКНФ:</strong> @Model.SKNFOutput
-        </div>
-    }
-
-    <!-- Вывод CДНФ -->
-    @if (!string.IsNullOrEmpty(Model.SDNFOutput))
-
-    {
-        <div class="alert alert-warning mt-3">
-            <strong>СДНФ:</strong> @Model.SDNFOutput
-        </div>
-    }
-
-
-    @if (Model.KarnaughSteps != null)
-
-    {
-        <div class="mt-3">
-            <h3>Пошаговое построение карты Карно</h3>
-
-            <!-- Навигация -->
-            <div class="karnaugh-steps-nav">
-                <button type="button" onclick="prevStep()">Назад</button>
-                <span id="currentStep">1</span>/@Model.KarnaughSteps.Count
-                <button type="button" onclick="nextStep()">Вперед</button>
-            </div>
-
-            <!-- Контейнер для карты -->
-            <div id="karnaughStepsContainer">
-                @foreach (var step in Model.KarnaughSteps)
-
-                {
-                    <div class="karnaugh-step">
-                        <p>@step.Description</p>
-                        <table class="karnaugh-map">
-                            @foreach (var row in step.Map)
-                            {
-                                <tr>
-                                    @foreach (var cell in row)
-                                    {
-
-                                        if (row == step.Map.First())
-
-                                        {
-                                            <th>@cell</th>
-                                        }
-
-                                        else if (cell == "1")
-
-                                        {
-                                            <td class="one">@cell</td>
-                                        }
-
-                                        else if (cell == "0")
-
-                                        {
-                                            <td class="zero">@cell</td>
-                                        }
-
-                                        else
-
-                                        {
-                                            <td>@cell</td>
-                                        }
-                                    }
-                                </tr>
-                            }
-                        </table>
-                    </div>
-                }
-            </div>
-        </div>
-
-        <script>
-            let currentStep = 0;
-            const steps = document.querySelectorAll('.karnaugh-step');
-
-            function showStep(step) {
-                steps.forEach((s, i) => s.style.display = i === step ? 'block' : 'none');
-                document.getElementById('currentStep').textContent = step + 1;
-            }
-
-            function nextStep() {
-                if (currentStep < steps.length - 1) {
-                    currentStep++;
-                    showStep(currentStep);
-                }
-            }
-
-            function prevStep() {
-                if (currentStep > 0) {
-                    currentStep--;
-                    showStep(currentStep);
-                }
-            }
-
-            // Показать первый шаг
-            showStep(0);
-        </script>
-    }
-
-    
 </div>
 
 @if (Model.IsSolved)
 {
+    <!-- Блок с СКНФ и СДНФ -->
+    <div class="stepByStep">
+        <div class="minimization-result">
+            <h5>СКНФ</h5>
+            <div class="formula-box">@Model.SKNFOutput</div>
+        </div>
+
+        <div class="minimization-result">
+            <h5>СДНФ</h5>
+            <div class="formula-box">@Model.SDNFOutput</div>
+        </div>
+    </div>
+
+    <!-- Блок с картой Карно -->
+    <div class="stepByStep">
+        <h3>Пошаговое построение карты Карно</h3>
+
+        <!-- Навигация -->
+        <div class="karnaugh-steps-nav">
+            <button type="button" onclick="prevStep()">Назад</button>
+            <span id="currentStep">1</span>/@Model.KarnaughSteps.Count
+            <button type="button" onclick="nextStep()">Вперед</button>
+        </div>
+
+        <!-- Контейнер для карты -->
+        <div id="karnaughStepsContainer">
+            @foreach (var step in Model.KarnaughSteps)
+            {
+                <div class="karnaugh-step">
+                    <p>@step.Description</p>
+                    <table class="karnaugh-map">
+                        @foreach (var row in step.Map)
+                        {
+                            <tr>
+                                @foreach (var cell in row)
+                                {
+                                    if (row == step.Map.First())
+                                    {
+                                        <th>@cell</th>
+                                    }
+                                    else if (cell == "1")
+                                    {
+                                        <td class="one">@cell</td>
+                                    }
+                                    else if (cell == "0")
+                                    {
+                                        <td class="zero">@cell</td>
+                                    }
+                                    else
+                                    {
+                                        <td>@cell</td>
+                                    }
+                                }
+                            </tr>
+                        }
+                    </table>
+                </div>
+            }
+        </div>
+    </div>
+
+    <script>
+        let currentStep = 0;
+        const steps = document.querySelectorAll('.karnaugh-step');
+
+        function showStep(step) {
+            steps.forEach((s, i) => s.style.display = i === step ? 'block' : 'none');
+            document.getElementById('currentStep').textContent = step + 1;
+        }
+
+        function nextStep() {
+            if (currentStep < steps.length - 1) {
+                currentStep++;
+                showStep(currentStep);
+            }
+        }
+
+        function prevStep() {
+            if (currentStep > 0) {
+                currentStep--;
+                showStep(currentStep);
+            }
+        }
+
+        // Показать первый шаг
+        showStep(0);
+    </script>
+
+    <!-- Блок с пошаговым решением -->
     <div class="stepByStep">
         <hr />
         <div class="solution-title">Пошаговое решение</div>
@@ -204,7 +185,6 @@
         @if (Model.Areas != null && Model.Areas.Any())
         {
             <div class="areas-maps mt-4">
-                <h4>Выделенные области:</h4>
                 @for (int index = 0; index < Model.Areas.Count; index++)
                 {
                     var area = Model.Areas[index];
@@ -266,7 +246,10 @@
         @if (Model.ZeroAreas != null && Model.ZeroAreas.Any())
         {
             <div class="areas-maps mt-4">
-                <h4>Выделенные нулевые области:</h4>
+                <div class="solution-section">
+                    <h4>Минимизация КНФ</h4>
+                </div>
+                <hr />
                 @for (int index = 0; index < Model.ZeroAreas.Count; index++)
                 {
                     var area = Model.ZeroAreas[index];
@@ -287,7 +270,7 @@
                     }
 
                     <div class="highlight-area mt-4">
-                        <h5>Нулевая область №@(index + 1)</h5>
+                        <h5>Область №@(index + 1)</h5>
                         <table class="karnaugh-map">
                             @for (int r = 0; r < rowCount; r++)
                             {
@@ -325,33 +308,35 @@
                 }
             </div>
         }
+    </div>
+    <!-- Вывод МДНФ и МКНФ -->
+    <div class="stepByStep">
+        @if (!string.IsNullOrEmpty(Model.MDNFOutput))
+        {
+            <div class="minimization-result">
+                <h5>МДНФ</h5>
+                <div class="formula-box">@Model.MDNFOutput</div>
             </div>
-            <!-- Вывод МДНФ -->
-            @if (!string.IsNullOrEmpty(Model.MDNFOutput))
-            {
-                <div class="alert alert-warning mt-3">
-                    <strong>МДНФ:</strong> @Model.MDNFOutput
-                </div>
-            }
+        }
 
-            <!-- Вывод МКНФ -->
-            @if (!string.IsNullOrEmpty(Model.MKNFOutput))
-            {
-                <div class="alert alert-warning mt-3">
-                    <strong>МКНФ:</strong> @Model.MKNFOutput
-                </div>
-            }
-
+        @if (!string.IsNullOrEmpty(Model.MKNFOutput))
+        {
+            <div class="minimization-result">
+                <h5>МКНФ</h5>
+                <div class="formula-box">@Model.MKNFOutput</div>
+            </div>
         }
     </div>
 }
 
+
 <section class="instructions">
     <h2>Как пользоваться калькулятором</h2>
     <ul>
-        <li>Введите в поле логическую функцию или её вектор.</li>
-        <li>Используйте клавиатуру для быстрого ввода символов.</li>
-        <li>Нажмите на кнопку "Построить" для расчёта минимизации.</li>
+        <li> Введите в поле логическую функцию или её вектор.</li>
+        <li> Используйте клавиатуру для быстрого ввода символов.</li>
+        <li> Нажмите на кнопку "Построить" для расчёта минимизации.</li>
+        <li> Если вы не понимаете значение какой-либо кнопки, наведитесь на неё и нажмите F1, чтобы узнать её назначение.</li>
     </ul>
 </section>
 

@@ -187,7 +187,7 @@
         </script>
     }
 
-    
+
 </div>
 
 @if (Model.IsSolved)
@@ -325,24 +325,24 @@
                 }
             </div>
         }
-            </div>
-            <!-- Вывод МДНФ -->
-            @if (!string.IsNullOrEmpty(Model.MDNFOutput))
-            {
-                <div class="alert alert-warning mt-3">
-                    <strong>МДНФ:</strong> @Model.MDNFOutput
-                </div>
-            }
+    </div>
+    <!-- Вывод МДНФ -->
+    @if (!string.IsNullOrEmpty(Model.MDNFOutput))
+    {
+        <div class="alert alert-warning mt-3">
+            <strong>МДНФ:</strong> @Model.MDNFOutput
+        </div>
+    }
 
-            <!-- Вывод МКНФ -->
-            @if (!string.IsNullOrEmpty(Model.MKNFOutput))
-            {
-                <div class="alert alert-warning mt-3">
-                    <strong>МКНФ:</strong> @Model.MKNFOutput
-                </div>
-            }
+    <!-- Вывод МКНФ -->
+    @if (!string.IsNullOrEmpty(Model.MKNFOutput))
+    {
+        <div class="alert alert-warning mt-3">
+            <strong>МКНФ:</strong> @Model.MKNFOutput
+        </div>
+    }
 
-        }
+}
     </div>
 }
 

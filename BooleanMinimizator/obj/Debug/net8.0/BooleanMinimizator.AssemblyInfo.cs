@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("BooleanMinimizator")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+6b9ad04ae286c04bbfc505f2f0b9d6d3572f98b8")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+00571e20ae123387bfaba4e2d7a0e63e05b79dee")]
 [assembly: System.Reflection.AssemblyProductAttribute("BooleanMinimizator")]
 [assembly: System.Reflection.AssemblyTitleAttribute("BooleanMinimizator")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

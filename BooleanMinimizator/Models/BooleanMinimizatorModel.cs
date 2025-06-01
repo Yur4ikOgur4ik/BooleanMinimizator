@@ -36,7 +36,6 @@ namespace BooleanMinimizator.Models
         public List<Area> ZeroAreas { get; set; }
 
         public List<string> Variables { get; set; }
-        // Для области единиц (МДНФ)
         public string GetExpressionForArea(Area area, List<string> variables)
         {
             if (area == null || variables == null || variables.Count == 0 || KarnaughMap == null || KarnaughMap.Count == 0)
@@ -44,14 +43,16 @@ namespace BooleanMinimizator.Models
 
             // Разбор заголовка карты
             string header = KarnaughMap[0][0];
-            string[] parts = header.Split('\\');
-            if (parts.Length < 2)
-                parts = header.Split(new[] { "\\\\" }, StringSplitOptions.None);
+            string[] separator = new string[] { "\\\\", "\\" };
+            string[] parts = header.Split(separator, StringSplitOptions.RemoveEmptyEntries);
             if (parts.Length < 2)
                 return "";
 
-            List<string> rowVars = parts[0].Select(c => c.ToString()).ToList();
-            List<string> colVars = parts[1].Select(c => c.ToString()).ToList();
+            string rowHeader = parts[0].Trim();
+            string colHeader = parts[1].Trim();
+
+            List<string> rowVars = rowHeader.Select(c => c.ToString()).ToList();
+            List<string> colVars = colHeader.Select(c => c.ToString()).ToList();
 
             // Словарь для информации о переменных
             Dictionary<string, (string type, int index)> varInfo = new Dictionary<string, (string, int)>();
@@ -104,10 +105,11 @@ namespace BooleanMinimizator.Models
                 }
             }
 
-            return $"({string.Join(" ∧ ", literals)})";
+            return literals.Count > 0
+                ? $"({string.Join(" ∧ ", literals)})"
+                : "1"; // Константа 1 если нет переменных
         }
 
-        // Для области нулей (МКНФ)
         public string GetExpressionForZeroArea(Area area, List<string> variables)
         {
             if (area == null || variables == null || variables.Count == 0 || KarnaughMap == null || KarnaughMap.Count == 0)
@@ -115,14 +117,16 @@ namespace BooleanMinimizator.Models
 
             // Разбор заголовка карты
             string header = KarnaughMap[0][0];
-            string[] parts = header.Split('\\');
-            if (parts.Length < 2)
-                parts = header.Split(new[] { "\\\\" }, StringSplitOptions.None);
+            string[] separator = new string[] { "\\\\", "\\" };
+            string[] parts = header.Split(separator, StringSplitOptions.RemoveEmptyEntries);
             if (parts.Length < 2)
                 return "";
 
-            List<string> rowVars = parts[0].Select(c => c.ToString()).ToList();
-            List<string> colVars = parts[1].Select(c => c.ToString()).ToList();
+            string rowHeader = parts[0].Trim();
+            string colHeader = parts[1].Trim();
+
+            List<string> rowVars = rowHeader.Select(c => c.ToString()).ToList();
+            List<string> colVars = colHeader.Select(c => c.ToString()).ToList();
 
             // Словарь для информации о переменных
             Dictionary<string, (string type, int index)> varInfo = new Dictionary<string, (string, int)>();
@@ -175,7 +179,9 @@ namespace BooleanMinimizator.Models
                 }
             }
 
-            return $"({string.Join(" ∨ ", literals)})";
+            return literals.Count > 0
+                ? $"({string.Join(" ∨ ", literals)})"
+                : "0"; // Константа 0 если нет переменных
         }
 
         // Вспомогательный метод для получения кода Грея

@@ -45,9 +45,9 @@ button {
     margin-top: 20px; /* Опускаем кнопку на 20px */
 }
 
-    button:hover {
-        background-color: #333;
-    }
+button:hover {
+    background-color: #333;
+}
 
 /* СТИЛИ КЛАВИАТУРЫ */
 .keyboard {
@@ -77,10 +77,10 @@ button {
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), inset 0 1px 2px rgba(255, 255, 255, 0.2);
 }
 
-    .key:hover {
-        background: linear-gradient(145deg, #222, #333); /* Темно-серый при наведении */
-        box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15), inset 0 2px 3px rgba(255, 255, 255, 0.1);
-    }
+.key:hover {
+    background: linear-gradient(145deg, #222, #333); /* Темно-серый при наведении */
+    box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15), inset 0 2px 3px rgba(255, 255, 255, 0.1);
+}
 
 #output {
     margin-top: 20px;
@@ -119,37 +119,37 @@ button {
     margin-top: 15px;
 }
 
-    .truth-table th, .truth-table td,
-    .karnaugh-map th, .karnaugh-map td {
-        border: 1px solid #ddd;
-        padding: 8px;
-        text-align: center;
-    }
+.truth-table th, .truth-table td,
+.karnaugh-map th, .karnaugh-map td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: center;
+}
 
-    .truth-table th, .karnaugh-map th {
-        background-color: #f4f4f4;
-        font-weight: bold;
-    }
+.truth-table th, .karnaugh-map th {
+    background-color: #f4f4f4;
+    font-weight: bold;
+}
 
-    .truth-table tr:nth-child(even),
-    .karnaugh-map tr:nth-child(even) {
-        background-color: #f9f9f9;
-    }
+.truth-table tr:nth-child(even),
+.karnaugh-map tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
 
-    .truth-table tr:hover,
-    .karnaugh-map tr:hover {
-        background-color: #e0e0e0;
-    }
+.truth-table tr:hover,
+.karnaugh-map tr:hover {
+    background-color: #e0e0e0;
+}
 
-    /* Отдельное оформление ячеек карты Карно */
-    .karnaugh-map td.one {
-        background-color: #a5d6a7; /* Светло-зеленый */
-        font-weight: bold;
-    }
+/* Отдельное оформление ячеек карты Карно */
+.karnaugh-map td.one {
+    background-color: #a5d6a7; /* Светло-зеленый */
+    font-weight: bold;
+}
 
-    .karnaugh-map td.zero {
-        font-weight: bold;
-    }
+.karnaugh-map td.zero {
+    font-weight: bold;
+}
 
 /* Стили для кнопки Поддержка */
 #helpButton {
@@ -181,25 +181,25 @@ button {
     margin-top: 15px;
 }
 
-    .truth-table th,
-    .truth-table td {
-        border: 1px solid #ddd;
-        padding: 8px;
-        text-align: center;
-    }
+.truth-table th,
+.truth-table td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: center;
+}
 
-    .truth-table th {
-        background-color: #f4f4f4;
-        font-weight: bold;
-    }
+.truth-table th {
+    background-color: #f4f4f4;
+    font-weight: bold;
+}
 
-    .truth-table tr:nth-child(even) {
-        background-color: #f9f9f9;
-    }
+.truth-table tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
 
-    .truth-table tr:hover {
-        background-color: #e0e0e0;
-    }
+.truth-table tr:hover {
+    background-color: #e0e0e0;
+}
 
 /* Увеличиваем отступы */
 .alert {
@@ -221,48 +221,48 @@ button {
     border-collapse: collapse;
 }
 
-    .karnaugh-map th,
-    .karnaugh-map td {
-        border: 1px solid #ddd;
-        padding: 8px 12px;
-        text-align: center;
-    }
+.karnaugh-map th,
+.karnaugh-map td {
+    border: 1px solid #ddd;
+    padding: 8px 12px;
+    text-align: center;
+}
 
-    .karnaugh-map th {
-        background-color: #f5f5f5;
-        font-weight: bold;
-    }
+.karnaugh-map th {
+    background-color: #f5f5f5;
+    font-weight: bold;
+}
 
-    .karnaugh-map td {
-        background-color: #f5f5f5;
-        font-weight: bold;
-    }
+.karnaugh-map td {
+    background-color: #f5f5f5;
+    font-weight: bold;
+}
 
-        .karnaugh-map td.one {
-            background-color: #f5f5f5; /* Зеленый для единиц */
-            font-weight: bold;
-        }
+.karnaugh-map td.one {
+    background-color: #f5f5f5; /* Зеленый для единиц */
+    font-weight: bold;
+}
 
-        .karnaugh-map td.zero {
-            background-color: #f5f5f5; /* Красный для нулей */
-            font-weight: bold;
-        }
+.karnaugh-map td.zero {
+    background-color: #f5f5f5; /* Красный для нулей */
+    font-weight: bold;
+}
 
-    .karnaugh-map tr:first-child th:first-child {
-        border-top-left-radius: 5px;
-    }
+.karnaugh-map tr:first-child th:first-child {
+    border-top-left-radius: 5px;
+}
 
-    .karnaugh-map tr:first-child th:last-child {
-        border-top-right-radius: 5px;
-    }
+.karnaugh-map tr:first-child th:last-child {
+    border-top-right-radius: 5px;
+}
 
-    .karnaugh-map tr:last-child td:first-child {
-        border-bottom-left-radius: 5px;
-    }
+.karnaugh-map tr:last-child td:first-child {
+    border-bottom-left-radius: 5px;
+}
 
-    .karnaugh-map tr:last-child td:last-child {
-        border-bottom-right-radius: 5px;
-    }
+.karnaugh-map tr:last-child td:last-child {
+    border-bottom-right-radius: 5px;
+}
 
 .stepByStep {
     margin-top: 30px;
@@ -287,12 +287,12 @@ button {
     text-align: left;
 }
 
-    .solution-section h4 {
-        font-size: 20px;
-        font-weight: 600;
-        margin-bottom: 15px;
-        color: #444;
-    }
+.solution-section h4 {
+    font-size: 20px;
+    font-weight: 600;
+    margin-bottom: 15px;
+    color: #444;
+}
 
 hr {
     border: none;

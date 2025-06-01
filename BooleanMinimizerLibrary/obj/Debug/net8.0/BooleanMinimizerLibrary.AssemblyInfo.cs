@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("BooleanMinimizerLibrary")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+00571e20ae123387bfaba4e2d7a0e63e05b79dee")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+1c184e5e81ce38ce031c30be351a049e20ef76ff")]
 [assembly: System.Reflection.AssemblyProductAttribute("BooleanMinimizerLibrary")]
 [assembly: System.Reflection.AssemblyTitleAttribute("BooleanMinimizerLibrary")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

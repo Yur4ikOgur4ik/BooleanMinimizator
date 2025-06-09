@@ -10,7 +10,9 @@ namespace BooleanMinimizerLibrary
         Or,
         Xor,
         Implies,
-        Equivalent
+        Equivalent,
+        Nand,
+        Nor      
     }
 
     public class Node
